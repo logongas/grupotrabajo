@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.fpmislata.seguros.negocio.Seguro"  >
+        <id       name="idSeguro" >
+            <generator class="identity" />
+        </id>
+        <property name="nombre"    />
+        <property name="ape1"    />
+        <property name="ape2"    />
+        <property name="edad"    />
+        <property name="sexo" >
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.fpmislata.seguros.negocio.Sexo</param>
+                <param name="type">12</param>
+            </type>
+        </property>        
+        <property name="casado"    />
+        <property name="numHijos"    />
+        <property name="embarazada"    />
+        <component  name="coberturas"    >
+            <property name="oftalmologia"    />
+            <property name="dental"    />
+            <property name="fecundacionInVitro"    />            
+        </component>
+        <component  name="enfermedades"    >
+            <property name="corazon"    />
+            <property name="estomacal"    />
+            <property name="rinyones"    />
+            <property name="alergia"    />
+            <property name="nombreAlergia"    />            
+        </component>
+                
+    </class>
+</hibernate-mapping>
