@@ -11,7 +11,7 @@
         <script src="/seguros/js/jquery.js"></script>
         <script src="/seguros/js/bootstrap.js"></script>
         <script src="/seguros/js/underscore.js"></script>
-        <script src="/seguros/js/backbone.js"></script>
+        <script src="/seguros/js/angular.js"></script>
         <script src="/seguros/js/dao.js"></script>  
         <script src="/seguros/nuevoseguro.js"></script>  
     </head>

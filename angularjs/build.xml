@@ -68,4 +68,172 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="deployProduction" depends="-configureAnt,-enableProduccion,dist,-deployProduccion,-deployDataBase,-javadoc,-databaseschema" >
+        <!--
+            El fichero ${proyecto.productionFile} debe tener las siguientes propiedades:
+            tomcat.production.url
+            tomcat.production.user  <- Opcional. Por defecto es admin
+            tomcat.producion.password
+
+            datasource.datos.url
+            datasource.datos.username
+            datasource.datos.password
+            datasource.sqlfiles.package:    Nombre del paquete java donde están los ficheros SQL de la base de datos.
+                                            Por defecto su valor es "database".
+            javadoc.rootpath:               Path deonde Donde colocar el JavaDoc generado. 
+                                            Por defecto en "/var/www/vhosts/default/htdocs/proyectos"
+            databaseschema.rootpath:        Path donde colocar la documentación HTML de la base de datos.
+                                            Por defecto en "/var/www/vhosts/default/htdocs/proyectos"
+        -->
+    </target>    
+    
+    <target name="-configureAnt">
+        <property name="libAnt.path" value="libant" />
+        
+        <path id="libAnt.classpath">
+            <fileset dir="${libAnt.path}">
+                <include name="**/*.jar" />
+            </fileset>
+            <fileset dir="lib">
+                <include name="**/*.jar" />
+            </fileset>            
+        </path> 
+        
+        <property name="libs.CopyLibs.classpath" value="${libAnt.path}/org-netbeans-modules-java-j2seproject-copylibstask.jar" />        
+        <property name="j2ee.server.home" value="${libAnt.path}" /> 
+        
+        <!-- Para tener el try-cath -->
+        <taskdef classpathref="libAnt.classpath" resource="net/sf/antcontrib/antcontrib.properties"/>
+        <!-- Manejo de ficheros XML -->
+        <taskdef classpathref="libAnt.classpath" name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+        
+        <!-- Tareas de Tomcat -->
+        <taskdef classpathref="libAnt.classpath" name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+        <taskdef classpathref="libAnt.classpath" name="start" classname="org.apache.catalina.ant.StartTask" />
+        <taskdef classpathref="libAnt.classpath" name="stop" classname="org.apache.catalina.ant.StopTask" />
+        <taskdef classpathref="libAnt.classpath" name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+        
+        <!-- Cargar las taks de FlyWay para Ant -->
+        <taskdef classpathref="libAnt.classpath" resource="com/googlecode/flyway/ant/antlib.xml" />          
+    </target>
+    
+
+
+    <target name="-pre-compile" depends="-pre-compile-configureDesarrollo,-pre-compile-configureProduccion">
+    </target>
+
+    <target name="-pre-compile-configureDesarrollo" unless="enableProduccion">
+        
+    </target>
+
+    <target name="-pre-compile-configureProduccion" if="enableProduccion">
+        <delete file="${build.web.dir}/META-INF/context.xml"/>
+    </target>
+    
+    <target name="-pre-dist" depends="-pre-dist-configureDesarrollo,-pre-dist-configureProduccion">
+    </target>    
+
+    <target name="-pre-dist-configureDesarrollo" unless="enableProduccion" >
+
+    </target>
+
+    <target name="-pre-dist-configureProduccion" if="enableProduccion" >
+        <echo>Configurando para producción ${ant.project.name}</echo>
+        <echo>Fichero de configuración:${proyecto.productionFile}</echo>
+       
+ 
+        
+        <!-- propiedades del entorno de producción -->
+        <property file="${proyecto.productionFile}" />
+        <!--
+            OJO:siempre despues de cargar el fichero de propiedades
+            Pq al ser las propiedades inmutables, si no tiene valor se pone por defecto.
+        -->
+        <property name="tomcat.production.user" value="admin"/>
+
+        <!-- Propiedades del proyecto -->
+        <property file="nbproject/project.properties"/>
+
+        <!-- Cargar el context.xml para averiguar la ruta de la app -->
+        <xmlproperty file="${web.docbase.dir}/META-INF/context.xml" />
+
+        <!-- Poner los datos de la conexión de producción -->
+        <xmltask source="${build.web.dir}/META-INF/context.xml" dest="${build.web.dir}/META-INF/context.xml" >
+            <replace path="/Context/Resource[@name='jdbc/${ant.project.name}' and @driverClassName='com.mysql.jdbc.Driver']/@url" withText="${datasource.datos.url}" />
+            <replace path="/Context/Resource[@name='jdbc/${ant.project.name}' and @driverClassName='com.mysql.jdbc.Driver']/@username" withText="${datasource.datos.username}" />
+            <replace path="/Context/Resource[@name='jdbc/${ant.project.name}' and @driverClassName='com.mysql.jdbc.Driver']/@password" withText="${datasource.datos.password}" />
+        </xmltask>
+
+
+    </target>    
+    
+    <target name="-enableProduccion"  >
+        <property name="enableProduccion" value="yes"/>
+    </target>       
+    
+    <target name="-deployProduccion" depends="-undeployProduccion"  >
+        <echo>Desplegado aplicación ........</echo>
+        <deploy url="${tomcat.production.url}/manager" username="${tomcat.production.user}" password="${tomcat.production.password}" path="${Context(path)}" war="${basedir}/${dist.war}" update="true"/>
+        <start url="${tomcat.production.url}/manager" username="${tomcat.production.user}" password="${tomcat.production.password}" path="${Context(path)}" />
+    </target>
+
+
+    <target name="-undeployProduccion">
+        <trycatch property="exception" >
+            <try>
+                <stop url="${tomcat.production.url}/manager" username="${tomcat.production.user}" password="${tomcat.production.password}" path="${Context(path)}"/>
+            </try>
+            <catch>
+                <echo>No se pudo parar la aplicacion en Tomcat.Excepcion ${exception}</echo>
+            </catch>
+        </trycatch>
+        <trycatch property="exception">
+            <try>
+                <undeploy url="${tomcat.production.url}/manager" username="${tomcat.production.user}" password="${tomcat.production.password}" path="${Context(path)}"/>
+            </try>
+            <catch>
+                <echo>No se pudo replegar la aplicación en Tomcat.Excepcion ${exception}</echo>
+            </catch>
+        </trycatch>
+    </target>
+    
+    <target name="-deployDataBase">
+        <echo>Desplegando en la base de datos</echo>
+      
+        <!-- Nombre del paquete donde se encuentran los ficheros sql -->
+        <property name="datasource.sqlfiles.package" value="database"/>
+      
+        <path id="flyway.classpath">
+            <!-- Aqui están los Drivers de MySQL -->
+            <fileset dir="lib" includes="*.jar"/>
+            <!-- Aqui está el WAR con el código -->
+            <fileset dir="${dist.dir}"/>          
+        </path>        
+        <property name="flyway.driver" value="${Context.Resource(driverClassName)}"/>
+        <property name="flyway.url" value="${datasource.datos.url}"/>
+        <property name="flyway.user" value="${datasource.datos.username}"/>
+        <property name="flyway.password" value="${datasource.datos.password}"/>        
+        <property name="flyway.initOnMigrate" value="true"/> <!-- Si la DB está vacia que la inicialice -->
+
+        <property name="migration_base_dir" value="WEB-INF.classes.${datasource.sqlfiles.package}"/>
+        <echo>Iniciando migración desde ${migration_base_dir}</echo>         
+        <migrate>
+            <locations>
+                <location  path="${migration_base_dir}"/>
+            </locations>            
+        </migrate> 
+
+    </target>
+    
+          
+    <target name="-javadoc" depends="javadoc" if="enableProduccion">
+        <property name="javadoc.rootpath" value="/var/www/vhosts/default/htdocs/proyectos"/>
+        <property name="javadoc.path" value="${javadoc.rootpath}/${ant.project.name}/javadoc" />
+        
+        <delete dir="${javadoc.path}" quiet="true" />
+        
+        <move file="${dist.dir}/javadoc" todir="${javadoc.rootpath}/${ant.project.name}" />
+    </target>      
+                        
+    
 </project>
