@@ -41,7 +41,7 @@
 
                         <div class="span1" style="text-align: right">Sexo:</div>
                         <div class="span7" >
-                            <select id="sexo" ng-model="seguro.sexo" ng-options="sexo.Codigo as sexo.Descripcion for sexo in sexos">
+                            <select id="sexo" ng-model="seguro.sexo" ng-options="sexo.Codigo as sexo.Descripcion for sexo in sexos" >
                                     <option value="">-- Elige sexo --</option>
                             </select>
                         </div>
@@ -53,7 +53,7 @@
                             <div class="span2" style="text-align: right"><input id="casado" type="checkbox" ng-model="seguro.casado"> Casado</div>
                             <div class="span2"  style="text-align: right" >Nº&nbsp;Hijos:</div>
                             <div class="span2" ><input type="number" id="numHijos" class="input-mini" ng-disabled="seguro.casado==false"  ng-model="seguro.numHijos"/></div>
-                            <div class="span6" ><input id="embarazada" type="checkbox" ng-model="seguro.embarazada" ng-disabled="seguro.sexo!='Mujer'" > Embarazada</div>
+                            <div class="span6" ><input id="embarazada" type="checkbox" ng-model="seguro.embarazada" ng-disabled="disabledSexo" > Embarazada</div>
                         </div>                    
                     </div>  
                     <div class="row">

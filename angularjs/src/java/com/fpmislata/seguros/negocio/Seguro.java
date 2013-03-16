@@ -24,7 +24,7 @@ public class Seguro {
     private String ape2;
     @Min(18)
     private int edad=18;
-    private Sexo sexo;
+    private Sexo sexo=Sexo.Mujer;
     private boolean casado;
     @Min(0)
     private int numHijos;
