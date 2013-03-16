@@ -34,6 +34,6 @@
                     </div>
                 </div>
             </div>
-        </div>0.2 <!-- /container -->
+        </div>0.3 <!-- /container -->
     </body>
 </html>
