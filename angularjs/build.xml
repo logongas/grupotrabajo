@@ -235,5 +235,7 @@
         <move file="${dist.dir}/javadoc" todir="${javadoc.rootpath}/${ant.project.name}" />
     </target>      
                         
-    
+    <target name="-databaseschema"  if="enableProduccion">
+
+    </target>      
 </project>
