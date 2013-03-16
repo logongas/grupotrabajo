@@ -2,7 +2,7 @@
 <%
 %>
 <!DOCTYPE html>
-<html>
+<html ng-app>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Seguros</title>
@@ -15,7 +15,7 @@
         <script src="/seguros/js/dao.js"></script>  
         <script src="/seguros/nuevoseguro.js"></script>  
     </head>
-    <body>
+    <body ng-controller="SeguroCtrl">
 
         <div class="container" style="width: 80%;padding: 0px;border: 0px;">
             <div class="content">
@@ -26,24 +26,23 @@
                     <div class="row">
                         <div class="row">                    
                             <div class="span1" style="text-align: right" >Nombre:</div>
-                            <div class="span3" ><input type="text" id="nombre" /></div>
+                            <div class="span3" ><input type="text" id="nombre" ng-model="seguro.nombre"/></div>
 
                             <div class="span1" style="text-align: right">1º&nbsp;Apellido:</div>
-                            <div class="span3" ><input type="text" id="ape1" /></div>
+                            <div class="span3" ><input type="text" id="ape1" ng-model="seguro.ape1"/></div>
 
                             <div class="span1" style="text-align: right">2º&nbsp;Apellido:</div>
-                            <div class="span3" ><input type="text" id="ape2" /></div>
+                            <div class="span3" ><input type="text" id="ape2" ng-model="seguro.ape2"/></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="span1" style="text-align: right" >Edad</div>
-                        <div class="span3" ><input type="number" id="edad" /></div>
+                        <div class="span3" ><input type="number" id="edad" ng-model="seguro.edad" /></div>
 
                         <div class="span1" style="text-align: right">Sexo:</div>
                         <div class="span7" >
-                            <select id="sexo" >
-                                <option value="Hombre">Hombre</option>
-                                <option value="Mujer">Mujer</option>
+                            <select id="sexo" ng-model="seguro.sexo" ng-options="sexo.Codigo as sexo.Descripcion for sexo in sexos">
+                                    <option value="">-- Elige sexo --</option>
                             </select>
                         </div>
                     </div>
@@ -51,35 +50,35 @@
                         <div class="span12" style="text-align: left" ><h4>Situación personal</h4></div>
 
                         <div class="row">
-                            <div class="span2" style="text-align: right"><input id="casado" type="checkbox"> Casado</div>
+                            <div class="span2" style="text-align: right"><input id="casado" type="checkbox" ng-model="seguro.casado"> Casado</div>
                             <div class="span2"  style="text-align: right" >Nº&nbsp;Hijos:</div>
-                            <div class="span2" ><input type="number" id="numHijos" class="input-mini" /></div>
-                            <div class="span6" ><input id="embarazada" type="checkbox"> Embarazada</div>
+                            <div class="span2" ><input type="number" id="numHijos" class="input-mini" ng-disabled="seguro.casado==false"  ng-model="seguro.numHijos"/></div>
+                            <div class="span6" ><input id="embarazada" type="checkbox" ng-model="seguro.embarazada" ng-disabled="seguro.sexo!='Mujer'" > Embarazada</div>
                         </div>                    
                     </div>  
                     <div class="row">
                         <div class="span12" style="text-align: left" ><h4>Enfermedades</h4></div>
 
                         <div class="row">
-                            <div class="span2" style="text-align: right"><input id="corazon" type="checkbox"> Corazon</div>
-                            <div class="span2" style="text-align: right"><input id="estomacal" type="checkbox"> Estomacal</div>
-                            <div class="span2" style="text-align: right"><input id="rinyones" type="checkbox"> Ri&ntilde;ones</div>
-                            <div class="span2" style="text-align: right"><input id="alergia" type="checkbox"> Alergia</div>
-                            <div class="span4" ><input type="text" id="nombreAlergia" placeholder="nombre de la alergía" /></div>
+                            <div class="span2" style="text-align: right"><input id="corazon" type="checkbox" ng-model="seguro.enfermedades.corazon"> Corazon</div>
+                            <div class="span2" style="text-align: right"><input id="estomacal" type="checkbox" ng-model="seguro.enfermedades.estomacal"> Estomacal</div>
+                            <div class="span2" style="text-align: right"><input id="rinyones" type="checkbox" ng-model="seguro.enfermedades.rinyones"> Ri&ntilde;ones</div>
+                            <div class="span2" style="text-align: right"><input id="alergia" type="checkbox" ng-model="seguro.enfermedades.alergia"> Alergia</div>
+                            <div class="span4" ><input type="text" id="nombreAlergia" placeholder="nombre de la alergía" ng-model="seguro.enfermedades.nombreAlergia" ng-Style="visibleTexto()" /></div>
                         </div>   
                     </div>  
                     <div class="row">
                         <div class="span12" style="text-align: left" ><h4>Coberturas extras</h4></div>
 
                         <div class="row">
-                            <div class="span2" style="text-align: right"><input id="oftalmologia" type="checkbox"> Oftalmologia</div>
-                            <div class="span2" style="text-align: center"><input id="dental" type="checkbox"> Dental</div>
-                            <div class="span8" style="text-align: left"><input id="fecundacionInVitro" type="checkbox"> Fecundacion in vitro</div>
+                            <div class="span2" style="text-align: right"><input id="oftalmologia" type="checkbox" ng-model="seguro.coberturas.oftalmologia"> Oftalmologia</div>
+                            <div class="span2" style="text-align: center"><input id="dental" type="checkbox" ng-model="seguro.coberturas.dental"> Dental</div>
+                            <div class="span8" style="text-align: left"><input id="fecundacionInVitro" type="checkbox" ng-model="seguro.coberturas.fecundacionInVitro"> Fecundacion in vitro</div>
                         </div>   
                     </div>
                 </form>                       
                 <div class="row">
-                    <div class="span11" style="text-align: right" ><button id="btnAceptar" class="btn btn-primary" >Aceptar</button> </div>  
+                    <div class="span11" style="text-align: right" ><button id="btnAceptar" class="btn btn-primary" ng-click="btnAceptarClick()">Aceptar</button> </div>  
                     <div class="span1" style="text-align: right" ><button id="btnCancelar" class="btn" >Cancelar</button> </div>  
                 </div>
 

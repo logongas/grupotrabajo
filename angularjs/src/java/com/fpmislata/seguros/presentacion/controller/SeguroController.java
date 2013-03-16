@@ -33,7 +33,7 @@ public class SeguroController {
     @Autowired
     JsonTransformer jsonTransformer;
 
-    @RequestMapping(value = {"/seguro"}, method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = {"/seguro"}, method = RequestMethod.POST)
     public void insert(HttpServletRequest request, HttpServletResponse httpServletResponse, @RequestBody String json) {
         try {
             Seguro seguro = jsonTransformer.fromJson(json, Seguro.class);
@@ -69,7 +69,41 @@ public class SeguroController {
     }
 
     
-    @RequestMapping(value = {"/seguro/{idSeguro}"}, method = RequestMethod.GET, consumes = "application/json")
+    @RequestMapping(value = {"/seguro"}, method = RequestMethod.GET)
+    public void create(HttpServletRequest request, HttpServletResponse httpServletResponse) {
+        try {
+            Seguro seguro = seguroDAO.create();
+
+            String datos = jsonTransformer.toJson(seguro);
+
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            httpServletResponse.setContentType("application/json; charset=UTF-8");
+            httpServletResponse.getWriter().println(datos);
+
+        } catch (BusinessException be) {
+
+            Set<BusinessMessage> businessMessages = be.getBussinessMessages();
+            String jsonBusinessMessages = jsonTransformer.toJson(businessMessages);
+
+            httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            httpServletResponse.setContentType("application/json; charset=UTF-8");
+            try {
+                httpServletResponse.getWriter().println(jsonBusinessMessages);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } catch (Exception ex) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            httpServletResponse.setContentType("text/plain; charset=UTF-8");
+            try {
+                ex.printStackTrace(httpServletResponse.getWriter());
+            } catch (IOException ex1) {
+                throw new RuntimeException(ex1);
+            }
+        }
+    }    
+    
+    @RequestMapping(value = {"/seguro/{idSeguro}"}, method = RequestMethod.GET)
     public void get(HttpServletRequest request, HttpServletResponse httpServletResponse, @PathVariable("idSeguro") int idSeguro) {
         try {
             Seguro seguro = seguroDAO.get(idSeguro);

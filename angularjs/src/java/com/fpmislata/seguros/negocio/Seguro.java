@@ -23,16 +23,16 @@ public class Seguro {
     @NotBlank
     private String ape2;
     @Min(18)
-    private int edad;
+    private int edad=18;
     private Sexo sexo;
     private boolean casado;
     @Min(0)
     private int numHijos;
     private boolean embarazada;
     @Valid
-    private Coberturas coberturas;
+    private Coberturas coberturas=new Coberturas();
     @Valid
-    private Enfermedades enfermedades;
+    private Enfermedades enfermedades=new Enfermedades();
 
     @AssertTrue(message="Si está embarazada debe ser una mujer")
     private boolean isValidacionEmbarazada() {
