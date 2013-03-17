@@ -31,3 +31,11 @@ legend {
     font-weight: bold;
     color: #404040;
 }
+
+visible {
+    visibility: visible;
+}
+
+invisible {
+    visibility: hidden;
+}

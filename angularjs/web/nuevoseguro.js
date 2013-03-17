@@ -31,19 +31,6 @@ function SeguroCtrl($scope,$http) {
     
 
     
-    $scope.visibleTexto=function() {
-        
-        if ($scope.seguro && $scope.seguro.enfermedades.alergia) {
-            return {
-                visibility:"visible"
-            };
-        } else {
-            return {
-                visibility:"hidden"
-            };
-        }
-    }
-    
     $scope.btnAceptarClick=function() {
         $http.post("/seguros/api/seguro",$scope.seguro).success(function(data) {
             $scope.seguro = data;

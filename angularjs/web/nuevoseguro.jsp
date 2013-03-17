@@ -64,7 +64,7 @@
                             <div class="span2" style="text-align: right"><input id="estomacal" type="checkbox" ng-model="seguro.enfermedades.estomacal"> Estomacal</div>
                             <div class="span2" style="text-align: right"><input id="rinyones" type="checkbox" ng-model="seguro.enfermedades.rinyones"> Ri&ntilde;ones</div>
                             <div class="span2" style="text-align: right"><input id="alergia" type="checkbox" ng-model="seguro.enfermedades.alergia"> Alergia</div>
-                            <div class="span4" ><input type="text" id="nombreAlergia" placeholder="nombre de la alergía" ng-model="seguro.enfermedades.nombreAlergia" ng-Style="visibleTexto()" /></div>
+                            <div class="span4" ><input type="text" id="nombreAlergia" placeholder="nombre de la alergía" ng-model="seguro.enfermedades.nombreAlergia" ng-class="{'visible':seguro.enfermedades.alergia,'invisible':!seguro.enfermedades.alergia}" /></div>
                         </div>   
                     </div>  
                     <div class="row">
