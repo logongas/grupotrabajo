@@ -16,20 +16,26 @@ function SeguroCtrl($scope,$http) {
     }        
     ]
     
-    $scope.disabledSexo=true;
+    $scope.isMujer=function() {
+        if ($scope.seguro) {
+            if ($scope.seguro.sexo!="Mujer") {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
     
     $scope.$watch('seguro.sexo', function(newVal, oldVal){
-        if (scope.seguro) {
-            if (newVal!="Mujer") {
+        if ($scope.seguro) {
+            if ($scope.isMujer()==false) {
                 scope.seguro.embarazada=false;
-                scope.disabledSexo=true;
-            } else {
-                scope.disabledSexo=false;
             }
         }
     });    
     
-
     
     $scope.btnAceptarClick=function() {
         $http.post("/seguros/api/seguro",$scope.seguro).success(function(data) {

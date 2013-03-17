@@ -28,7 +28,7 @@ public class Seguro {
     private boolean casado;
     @Min(0)
     private int numHijos;
-    private boolean embarazada;
+    private boolean embarazada=true;
     @Valid
     private Coberturas coberturas=new Coberturas();
     @Valid
