@@ -138,7 +138,7 @@
     </target>
 
     <target name="-pre-dist-configureProduccion" if="enableProduccion" >
-        <echo>Configurando para producción ${ant.project.name}</echo>
+        <echo>Configurando para producción ${Context(path)}</echo>
         <echo>Fichero de configuración:${proyecto.productionFile}</echo>
        
  
@@ -159,9 +159,9 @@
 
         <!-- Poner los datos de la conexión de producción -->
         <xmltask source="${build.web.dir}/META-INF/context.xml" dest="${build.web.dir}/META-INF/context.xml" >
-            <replace path="/Context/Resource[@name='jdbc/${ant.project.name}' and @driverClassName='com.mysql.jdbc.Driver']/@url" withText="${datasource.datos.url}" />
-            <replace path="/Context/Resource[@name='jdbc/${ant.project.name}' and @driverClassName='com.mysql.jdbc.Driver']/@username" withText="${datasource.datos.username}" />
-            <replace path="/Context/Resource[@name='jdbc/${ant.project.name}' and @driverClassName='com.mysql.jdbc.Driver']/@password" withText="${datasource.datos.password}" />
+            <replace path="/Context/Resource[@name='jdbc/${Context(path)}' and @driverClassName='com.mysql.jdbc.Driver']/@url" withText="${datasource.datos.url}" />
+            <replace path="/Context/Resource[@name='jdbc/${Context(path)}' and @driverClassName='com.mysql.jdbc.Driver']/@username" withText="${datasource.datos.username}" />
+            <replace path="/Context/Resource[@name='jdbc/${Context(path)}' and @driverClassName='com.mysql.jdbc.Driver']/@password" withText="${datasource.datos.password}" />
         </xmltask>
 
 
@@ -228,11 +228,11 @@
           
     <target name="-javadoc" depends="javadoc" if="enableProduccion">
         <property name="javadoc.rootpath" value="/var/www/vhosts/default/htdocs/proyectos"/>
-        <property name="javadoc.path" value="${javadoc.rootpath}/${ant.project.name}/javadoc" />
+        <property name="javadoc.path" value="${javadoc.rootpath}/${Context(path)}/javadoc" />
         
         <delete dir="${javadoc.path}" quiet="true" />
         
-        <move file="${dist.dir}/javadoc" todir="${javadoc.rootpath}/${ant.project.name}" />
+        <move file="${dist.dir}/javadoc" todir="${javadoc.rootpath}/${Context(path)}" />
     </target>      
                         
     <target name="-databaseschema"  if="enableProduccion">
