@@ -40,36 +40,39 @@ app.directive('mostrar', function() {
 app.directive('clear', function() {
 
     return function($scope, element, attributes) {
-        function setDeep(obj, keyString, newValue) {
-            for(var keys = keyString.split('.'), i = 0, l = keys.length; i < l - 1; i++) {
+        function setValue(obj,key,newValue) {
+            var keys = key.split('.');
+            for(var i = 0; i < keys.length - 1; i++) {
                 obj = obj[keys[i]];
                 if(obj === undefined) {
-                    return undefined;
+                    return;
                 }
             }
-            if(obj[keys[l - 1]] === undefined) {
-                return undefined;
+            if(obj[keys[keys.length - 1]] === undefined) {
+                return;
             }
-            obj[keys[l - 1]] = newValue;
-            return newValue;
+            obj[keys[keys.length - 1]] = newValue;
         }        
         
-        function clear($scope,model) {
-            setDeep($scope,model,null);
+
+        var clear = attributes.clear;
+        var clearValue=attributes.clearValue;
+        var ngModel=attributes.ngModel;
+        if (clearValue===undefined) {
+            clearValue="null";//Es un String pq luego se hace un "$eval"
+        }
+        
+        if ($scope.$eval(clear)===true ) {
+            setValue($scope,ngModel,$scope.$eval(clearValue));
         }
 
-        var expression = attributes.clear;
-        if ($scope.$eval( expression )===true ) {
-            clear($scope,attributes.ngModel);
-        }
-
-        $scope.$watch(expression,function( newValue, oldValue ) {           
+        $scope.$watch(clear,function( newValue, oldValue ) {    
+            
             if ( newValue === oldValue ) {
                 return;
             }
- 
             if ( newValue===true ) {
-                clear($scope,attributes.ngModel);
+                setValue($scope,ngModel,$scope.$eval(clearValue));
             }
  
         });  
