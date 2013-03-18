@@ -78,13 +78,7 @@ app.directive('clear', function() {
 });
 
 
-function SeguroCtrl($scope,$http) { 
-    var scope=$scope;
-    
-    $scope.log=function(msg) {
-        console.log(msg)
-    }
-    
+function SeguroCtrl($scope,$http) {         
     $http.get("/seguros/api/seguro").success(function(data) {
         $scope.seguro = data;
     });    
