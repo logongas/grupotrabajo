@@ -40,14 +40,18 @@ app.directive('mostrar', function() {
 app.directive('clear', function() {
 
     return function($scope, element, attributes) {
-        function setDeep(obj, keyString, val) {
+        function setDeep(obj, keyString, newValue) {
             for(var keys = keyString.split('.'), i = 0, l = keys.length; i < l - 1; i++) {
                 obj = obj[keys[i]];
-                if(obj === undefined) return undefined;
+                if(obj === undefined) {
+                    return undefined;
+                }
             }
-            if(obj[keys[l - 1]] === undefined) return undefined;
-            obj[keys[l - 1]] = val;
-            return val;
+            if(obj[keys[l - 1]] === undefined) {
+                return undefined;
+            }
+            obj[keys[l - 1]] = newValue;
+            return newValue;
         }        
         
         function clear($scope,model) {
@@ -59,9 +63,7 @@ app.directive('clear', function() {
             clear($scope,attributes.ngModel);
         }
 
-        $scope.$watch(expression,function( newValue, oldValue ) {
-            console.log(newValue + " " + oldValue)
-            
+        $scope.$watch(expression,function( newValue, oldValue ) {           
             if ( newValue === oldValue ) {
                 return;
             }
