@@ -41,8 +41,8 @@
 
                         <div class="span1" style="text-align: right">Sexo:</div>
                         <div class="span7" >
-                            <select id="sexo" ng-model="seguro.sexo" ng-options="sexo.Codigo as sexo.Descripcion for sexo in sexos" >
-                                    <option value="">-- Elige sexo --</option>
+                            <select id="sexo" ng-change="log(seguro.sexo)" ng-model="seguro.sexo" ng-options="sex.Codigo as sex.Descripcion for sex in sexos" >
+                                <option value="">-- Elige sexo --</option>
                             </select>
                         </div>
                     </div>
@@ -81,7 +81,13 @@
                     <div class="span11" style="text-align: right" ><button id="btnAceptar" class="btn btn-primary" ng-click="btnAceptarClick()">Aceptar</button> </div>  
                     <div class="span1" style="text-align: right" ><button id="btnCancelar" class="btn" >Cancelar</button> </div>  
                 </div>
-
+                <br />
+                <div class="row alert alert-error"  data-ng-show="businessMessages.length>0">
+                    <strong>Se ha producido los siguientes errores:</strong><button type="button" class="close" data-ng-click="businessMessages=[]">×</button>
+                    <div class="row" data-ng-repeat="businessMessage in businessMessages">
+                        <div class="span12"  ><strong data-ng-hide="businessMessage.fieldName==null">{{businessMessage.fieldName}}:&nbsp;&nbsp;</strong>{{businessMessage.message}}</div>  
+                    </div>
+                </div>                
             </div>
         </div>
     </body>

@@ -62,6 +62,8 @@ public class FilterImplSecurityAPI implements Filter {
             if (securityAPI.permitido(uri, method, usuario) == true) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
+                httpServletResponse.setContentType("text/plain; charset=UTF-8");
+                httpServletResponse.getWriter().println("Su sesión ha caducado o no tiene permisos");
                 httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         } catch (BusinessException be) {

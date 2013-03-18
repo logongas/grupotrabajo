@@ -1,6 +1,10 @@
 function SeguroCtrl($scope,$http) { 
     var scope=$scope;
     
+    $scope.log=function(msg) {
+        console.log(msg)
+    }
+    
     $http.get("/seguros/api/seguro").success(function(data) {
         $scope.seguro = data;
     });    
@@ -34,27 +38,20 @@ function SeguroCtrl($scope,$http) {
                 scope.seguro.embarazada=false;
             }
         }
-    });    
-    
+    });
+
     
     $scope.btnAceptarClick=function() {
         $http.post("/seguros/api/seguro",$scope.seguro).success(function(data) {
             $scope.seguro = data;
+            $scope.businessMessages=[];
             alert("Nuevo seguro añadido con id="+data.idSeguro);
             window.location.href = 'menu.jsp';
         }).error(function(data, status, headers, config) {
             if (status===400) {
-                var businessMessages=data;
-                for(var i=0;i<businessMessages.length;i++) {
-                    var businessMessage=businessMessages[i];
-                    if (businessMessage.fieldName===null) {
-                        alert(businessMessage.message);
-                    } else {
-                        alert(businessMessage.fieldName+":"+businessMessage.message);
-                    }
-                }
+                $scope.businessMessages=data;                
             } else {
-                alert("Falló la petición:"+status+"\n"+data);
+                $scope.businessMessages=[{fieldName:null,message:"Se ha producido un error en la aplicación:"+status+"\n"+data}];
             }
         });  
     }
