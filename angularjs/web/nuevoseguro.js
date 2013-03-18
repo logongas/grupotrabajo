@@ -1,3 +1,81 @@
+
+var app = angular.module('seguro', []);
+
+app.directive('mostrar', function() {
+
+    return function($scope, element, attributes) {
+        function mostrar(element) {
+            $(element).css({
+                visibility:"visible"
+            })
+        }
+        function ocultar(element) {
+            $(element).css({
+                visibility:"hidden"
+            })
+        }
+        
+        var expression = attributes.mostrar;
+        if ($scope.$eval( expression )===true ) {
+            mostrar(element);
+        } else {
+            ocultar(element);
+        }
+        
+        $scope.$watch(expression,function( newValue, oldValue ) {
+            if ( newValue === oldValue ) {
+                return;
+            }
+ 
+            if ( newValue===true ) {
+                mostrar(element);
+            } else { 
+                ocultar(element);
+            }
+ 
+        });        
+    }
+});
+
+app.directive('clear', function() {
+
+    return function($scope, element, attributes) {
+        function setDeep(obj, keyString, val) {
+            for(var keys = keyString.split('.'), i = 0, l = keys.length; i < l - 1; i++) {
+                obj = obj[keys[i]];
+                if(obj === undefined) return undefined;
+            }
+            if(obj[keys[l - 1]] === undefined) return undefined;
+            obj[keys[l - 1]] = val;
+            return val;
+        }        
+        
+        function clear($scope,model) {
+            setDeep($scope,model,null);
+        }
+
+        var expression = attributes.clear;
+        if ($scope.$eval( expression )===true ) {
+            clear($scope,attributes.ngModel);
+        }
+
+        $scope.$watch(expression,function( newValue, oldValue ) {
+            console.log(newValue + " " + oldValue)
+            
+            if ( newValue === oldValue ) {
+                return;
+            }
+ 
+            if ( newValue===true ) {
+                clear($scope,attributes.ngModel);
+            }
+ 
+        });  
+        
+    }
+});
+
+
 function SeguroCtrl($scope,$http) { 
     var scope=$scope;
     
@@ -32,14 +110,6 @@ function SeguroCtrl($scope,$http) {
         }
     }
     
-    $scope.$watch('seguro.sexo', function(newVal, oldVal){
-        if ($scope.seguro) {
-            if ($scope.isMujer()==false) {
-                scope.seguro.embarazada=false;
-            }
-        }
-    });
-
     
     $scope.btnAceptarClick=function() {
         $http.post("/seguros/api/seguro",$scope.seguro).success(function(data) {
@@ -51,7 +121,10 @@ function SeguroCtrl($scope,$http) {
             if (status===400) {
                 $scope.businessMessages=data;                
             } else {
-                $scope.businessMessages=[{fieldName:null,message:"Se ha producido un error en la aplicación:"+status+"\n"+data}];
+                $scope.businessMessages=[{
+                    fieldName:null,
+                    message:"Se ha producido un error en la aplicación:"+status+"\n"+data
+                }];
             }
         });  
     }
