@@ -81,7 +81,9 @@ app.directive('clear', function() {
 });
 
 
-function SeguroCtrl($scope,$http) {         
+function SeguroCtrl($scope,$http) { 
+    regula.bind(); 
+    
     $http.get("/seguros/api/seguro").success(function(data) {
         $scope.seguro = data;
     });    
@@ -111,6 +113,11 @@ function SeguroCtrl($scope,$http) {
     
     
     $scope.btnAceptarClick=function() {
+        
+        if ($scope.validate()==false) {
+            return;
+        }
+        
         $http.post("/seguros/api/seguro",$scope.seguro).success(function(data) {
             $scope.seguro = data;
             $scope.businessMessages=[];
@@ -122,10 +129,72 @@ function SeguroCtrl($scope,$http) {
             } else {
                 $scope.businessMessages=[{
                     fieldName:null,
-                    message:"Se ha producido un error en la aplicación:"+status+"\n"+data
+                    message:data + ".Estado HTTP:"+status
                 }];
             }
         });  
+    }
+    
+    $scope.validate=function() {
+        function getFieldName(element) {
+            var fieldName;
+            function isValidName(name) {
+                if ((typeof(name)==="string") && (name!="") ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            
+            fieldName=element.name;
+            if (isValidName(fieldName)==false) {
+                var ngModel=element.attributes["ng-model"].value;
+                var fieldNames = ngModel.split('.');
+                if (fieldNames.length==1) {
+                    fieldName=fieldNames[0]
+                } else {
+                    for(var i = 1; i < fieldNames.length; i++) {
+                        if (i==1) {
+                            fieldName=fieldNames[i];
+                        } else {
+                            fieldName=fieldName+"."+fieldNames[i]
+                        }
+                    }
+                }
+                if (isValidName(fieldName)==false) {
+                    fieldName=element.id+"";
+                    if (isValidName(fieldName)==false) {
+                        fieldName=null;
+                    }                    
+                }
+            }
+            
+            return fieldName;
+        }
+        
+        
+        $scope.businessMessages=[];
+        var validationResults = regula.validate();
+
+        for(var i = 0; i < validationResults.length; i++) {
+            var validationResult = validationResults[i];
+            var message=validationResult.message;
+            var fieldName;
+            if (validationResult.failingElements.length==0) {
+                fieldName=null;
+            } else {
+                fieldName=getFieldName(validationResult.failingElements[0])
+            }
+            
+            $scope.businessMessages.push(
+            {
+                fieldName:fieldName,
+                message:message
+            }
+            )
+        } 
+        
+        return ($scope.businessMessages.length==0)
     }
     
 }

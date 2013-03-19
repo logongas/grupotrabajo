@@ -10,9 +10,9 @@
         <link rel="stylesheet" href="/seguros/css/style.css"> 
         <script src="/seguros/js/jquery.js"></script>
         <script src="/seguros/js/bootstrap.js"></script>
-        <script src="/seguros/js/underscore.js"></script>
         <script src="/seguros/js/angular.js"></script>
-        <script src="/seguros/js/dao.js"></script>  
+        <script src="/seguros/js/dao.js"></script>
+        <script src="/seguros/js/regula.js"></script>
         <script src="/seguros/nuevoseguro.js"></script>  
     </head>
     <body ng-controller="SeguroCtrl">
@@ -26,18 +26,18 @@
                     <div class="row">
                         <div class="row">                    
                             <div class="span1" style="text-align: right" >Nombre:</div>
-                            <div class="span3" ><input type="text" id="nombre" ng-model="seguro.nombre"/></div>
+                            <div class="span3" ><input type="text" name="nombre" id="nombre" ng-model="seguro.nombre" data-constraints="@Required"/></div>
 
                             <div class="span1" style="text-align: right">1º&nbsp;Apellido:</div>
-                            <div class="span3" ><input type="text" id="ape1" ng-model="seguro.ape1"/></div>
+                            <div class="span3" ><input type="text" name="ape1" id="ape1" ng-model="seguro.ape1" data-constraints="@Required"/></div>
 
                             <div class="span1" style="text-align: right">2º&nbsp;Apellido:</div>
-                            <div class="span3" ><input type="text" id="ape2" ng-model="seguro.ape2"/></div>
+                            <div class="span3" ><input type="text" name="ape2" id="ape2" ng-model="seguro.ape2" data-constraints="@Required"/></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="span1" style="text-align: right" >Edad</div>
-                        <div class="span3" ><input type="number" id="edad" ng-model="seguro.edad" /></div>
+                        <div class="span3" ><input type="text" id="edad" ng-model="seguro.edad" data-constraints="@Numeric" /></div>
 
                         <div class="span1" style="text-align: right">Sexo:</div>
                         <div class="span7" >
@@ -52,19 +52,19 @@
                         <div class="row">
                             <div class="span2" style="text-align: right"><input id="casado" type="checkbox" ng-model="seguro.casado"> Casado</div>
                             <div class="span2"  style="text-align: right" >Nº&nbsp;Hijos:</div>
-                            <div class="span2" ><input type="number" id="numHijos" class="input-mini" ng-disabled="seguro.casado==false"  ng-model="seguro.numHijos"/></div>
-                            <div class="span6" ><input id="embarazada" type="checkbox" ng-model="seguro.embarazada" ng-disabled="isMujer()==false" clear="isMujer()==false" > Embarazada</div>
+                            <div class="span2" ><input type="text" id="numHijos" class="input-mini" ng-disabled="seguro.casado==false"  ng-model="seguro.numHijos" clear="seguro.casado==false" clear-value="0" data-constraints="@Numeric" /></div>
+                            <div class="span6" ><input id="embarazada" type="checkbox" ng-model="seguro.embarazada" ng-disabled="isMujer()==false" clear="isMujer()==false"  > Embarazada</div>
                         </div>                    
                     </div>  
                     <div class="row">
                         <div class="span12" style="text-align: left" ><h4>Enfermedades</h4></div>
 
                         <div class="row">
-                            <div class="span2" style="text-align: right"><input id="corazon" type="checkbox" ng-model="seguro.enfermedades.corazon"> Corazon</div>
+                            <div class="span2" style="text-align: right"><input id="corazon" type="checkbox" ng-model="seguro.enfermedades.corazon" > Corazon</div>
                             <div class="span2" style="text-align: right"><input id="estomacal" type="checkbox" ng-model="seguro.enfermedades.estomacal"> Estomacal</div>
                             <div class="span2" style="text-align: right"><input id="rinyones" type="checkbox" ng-model="seguro.enfermedades.rinyones"> Ri&ntilde;ones</div>
                             <div class="span2" style="text-align: right"><input id="alergia" type="checkbox" ng-model="seguro.enfermedades.alergia"> Alergia</div>
-                            <div class="span4" ><input type="text" id="nombreAlergia" placeholder="nombre de la alergía" ng-model="seguro.enfermedades.nombreAlergia" mostrar="seguro.enfermedades.alergia" clear="seguro.enfermedades.alergia==false" clear-value="'Sin Alergia'"  /></div>
+                            <div class="span4" ><input type="text" id="nombreAlergia" placeholder="nombre de la alergía" ng-model="seguro.enfermedades.nombreAlergia" mostrar="seguro.enfermedades.alergia" clear="seguro.enfermedades.alergia==false"   /></div>
                         </div>   
                     </div>  
                     <div class="row">
