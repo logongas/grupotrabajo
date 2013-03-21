@@ -29,7 +29,7 @@
                                 <div class="clearfix">
                                     <input type="password" name="password" id="password" placeholder="contrase&ntilde;a">
                                 </div>
-                                <button class="btn btn-primary" id="btnLogin" >Entrar</button>
+                                <button type="submit" class="btn btn-primary" id="btnLogin" >Entrar</button>
                             </fieldset>
                     </div>
                 </div>
