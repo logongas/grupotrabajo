@@ -20,7 +20,7 @@
         <div class="container">
             <div class="content">
                 <div class="row">
-                    <div class="formulario">
+                    <form class="formulario">                    
                         <h2>Identificarse</h2>
                             <fieldset>
                                 <div class="clearfix">
@@ -29,9 +29,9 @@
                                 <div class="clearfix">
                                     <input type="password" name="password" id="password" placeholder="contrase&ntilde;a">
                                 </div>
-                                <button class="btn btn-primary" id="btnLogin" >Entrar</button>
+                                <button type="submit" class="btn btn-primary" id="btnLogin" >Entrar</button>
                             </fieldset>
-                    </div>
+                    </form>                    
                 </div>
             </div>
         </div>0.5 <!-- /container -->
